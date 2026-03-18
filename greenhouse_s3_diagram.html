@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Greenhouse — ESP32-S3 Wiring Diagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0f0a;
+    font-family: 'Rajdhani', sans-serif;
+    color: #c8e6c9;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding: 20px;
+    border: 1px solid #2e7d32;
+    background: linear-gradient(135deg, #0d1f0e 0%, #0a150a 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1b5e20, #4caf50, #1b5e20);
+  }
+  header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #66bb6a;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  header p {
+    font-family: 'Share Tech Mono', monospace;
+    color: #4caf50;
+    font-size: 0.85rem;
+    margin-top: 6px;
+    letter-spacing: 2px;
+  }
+
+  .diagram-wrap {
+    background: #0d150d;
+    border: 1px solid #1b5e20;
+    border-radius: 4px;
+    overflow: auto;
+    padding: 16px;
+  }
+
+  svg {
+    display: block;
+    min-width: 1200px;
+  }
+
+  /* PIN TABLE */
+  .pin-tables {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .pin-card {
+    background: #0d1f0e;
+    border: 1px solid #2e7d32;
+    padding: 14px;
+  }
+
+  .pin-card h3 {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: #4caf50;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #1b5e20;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .pin-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px solid #0f1f10;
+    font-size: 0.82rem;
+  }
+  .pin-row:last-child { border-bottom: none; }
+
+  .pin-num {
+    font-family: 'Share Tech Mono', monospace;
+    color: #ffb300;
+    font-weight: 600;
+    min-width: 55px;
+    font-size: 0.78rem;
+  }
+
+  .pin-name { color: #a5d6a7; flex: 1; padding: 0 8px; }
+
+  .pin-type {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: 600;
+  }
+  .type-adc  { background: #1a237e; color: #90caf9; }
+  .type-pwm  { background: #311b92; color: #ce93d8; }
+  .type-dig  { background: #1b5e20; color: #a5d6a7; }
+  .type-i2c  { background: #4e342e; color: #ffcc80; }
+  .type-btn  { background: #1a1a1a; color: #9e9e9e; }
+
+  .warn-box {
+    background: #1a1200;
+    border: 1px solid #f57f17;
+    border-left: 4px solid #ffb300;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-size: 0.82rem;
+    color: #ffe082;
+    font-family: 'Share Tech Mono', monospace;
+    line-height: 1.7;
+  }
+  .warn-box strong { color: #ffb300; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>🌿 Smart Greenhouse — Wiring Diagram</h1>
+    <p>ESP32-S3 WROOM-1 · Blynk IoT · YOLOv8 Computer Vision · v3.0</p>
+  </header>
+
+  <div class="diagram-wrap">
+  <svg viewBox="0 0 1300 820" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+    <defs>
+      <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L6,3 z" fill="#4caf50" opacity="0.7"/>
+      </marker>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="2" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- Background -->
+    <rect width="1300" height="820" fill="#080e08"/>
+    <!-- Grid dots -->
+    <pattern id="grid" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="15" cy="15" r="0.8" fill="#1a2e1a" opacity="0.6"/>
+    </pattern>
+    <rect width="1300" height="820" fill="url(#grid)"/>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- ESP32-S3 WROOM-1 CENTER                        -->
+    <!-- ══════════════════════════════════════════════ -->
+    <g id="esp32s3">
+      <!-- Board body -->
+      <rect x="490" y="240" width="320" height="340" rx="6" fill="#0d2010" stroke="#2e7d32" stroke-width="2"/>
+      <rect x="490" y="240" width="320" height="20" rx="3" fill="#1b5e20"/>
+      <text x="650" y="256" text-anchor="middle" fill="#a5d6a7" font-size="11" font-family="Share Tech Mono, monospace" font-weight="bold" letter-spacing="2">ESP32-S3 WROOM-1</text>
+
+      <!-- Left pins (GPIO labels) -->
+      <!-- Left side pins -->
+      <g font-family="Share Tech Mono, monospace" font-size="9.5" fill="#ffb300">
+        <!-- Left column -->
+        <text x="545" y="280" text-anchor="middle">3V3</text>
+        <text x="545" y="300" text-anchor="middle">GND</text>
+        <text x="545" y="320" text-anchor="middle">GPIO1</text>
+        <text x="545" y="340" text-anchor="middle">GPIO2</text>
+        <text x="545" y="360" text-anchor="middle">GPIO4</text>
+        <text x="545" y="380" text-anchor="middle">GPIO5</text>
+        <text x="545" y="400" text-anchor="middle">GPIO6</text>
+        <text x="545" y="420" text-anchor="middle">GPIO7</text>
+        <text x="545" y="440" text-anchor="middle">GPIO8</text>
+        <text x="545" y="460" text-anchor="middle">GPIO9</text>
+        <text x="545" y="480" text-anchor="middle">GPIO10</text>
+        <text x="545" y="500" text-anchor="middle">GPIO11</text>
+        <text x="545" y="520" text-anchor="middle">GPIO12</text>
+        <text x="545" y="540" text-anchor="middle">GPIO13</text>
+        <text x="545" y="560" text-anchor="middle">GPIO14</text>
+      </g>
+
+      <!-- Left pin dots -->
+      <g fill="#4caf50">
+        <circle cx="492" cy="277" r="4"/><circle cx="492" cy="297" r="4"/>
+        <circle cx="492" cy="317" r="4"/><circle cx="492" cy="337" r="4"/>
+        <circle cx="492" cy="357" r="4"/><circle cx="492" cy="377" r="4"/>
+        <circle cx="492" cy="397" r="4"/><circle cx="492" cy="417" r="4"/>
+        <circle cx="492" cy="437" r="4"/><circle cx="492" cy="457" r="4"/>
+        <circle cx="492" cy="477" r="4"/><circle cx="492" cy="497" r="4"/>
+        <circle cx="492" cy="517" r="4"/><circle cx="492" cy="537" r="4"/>
+        <circle cx="492" cy="557" r="4"/>
+      </g>
+
+      <!-- Right side pins -->
+      <g font-family="Share Tech Mono, monospace" font-size="9.5" fill="#ffb300">
+        <text x="754" y="280" text-anchor="middle">GND</text>
+        <text x="754" y="300" text-anchor="middle">GPIO17</text>
+        <text x="754" y="320" text-anchor="middle">GPIO18</text>
+        <text x="754" y="340" text-anchor="middle">GPIO38</text>
+        <text x="754" y="360" text-anchor="middle">GPIO39</text>
+        <text x="754" y="380" text-anchor="middle">GPIO40</text>
+        <text x="754" y="400" text-anchor="middle">GPIO41</text>
+        <text x="754" y="420" text-anchor="middle">5V</text>
+        <text x="754" y="440" text-anchor="middle">GND</text>
+      </g>
+
+      <!-- Right pin dots -->
+      <g fill="#4caf50">
+        <circle cx="808" cy="277" r="4"/><circle cx="808" cy="297" r="4"/>
+        <circle cx="808" cy="317" r="4"/><circle cx="808" cy="337" r="4"/>
+        <circle cx="808" cy="357" r="4"/><circle cx="808" cy="377" r="4"/>
+        <circle cx="808" cy="397" r="4"/><circle cx="808" cy="417" r="4"/>
+        <circle cx="808" cy="437" r="4"/>
+      </g>
+
+      <!-- USB port -->
+      <rect x="620" y="556" width="60" height="14" rx="3" fill="#1a3a2a" stroke="#4caf50" stroke-width="1"/>
+      <text x="650" y="567" text-anchor="middle" fill="#66bb6a" font-size="8" font-family="Share Tech Mono, monospace">USB-C</text>
+
+      <!-- BOOT/EN buttons -->
+      <rect x="510" y="570" width="36" height="16" rx="3" fill="#1a2e20" stroke="#388e3c" stroke-width="1"/>
+      <text x="528" y="582" text-anchor="middle" fill="#81c784" font-size="8" font-family="Share Tech Mono, monospace">BOOT</text>
+      <rect x="555" y="570" width="30" height="16" rx="3" fill="#1a2e20" stroke="#388e3c" stroke-width="1"/>
+      <text x="570" y="582" text-anchor="middle" fill="#81c784" font-size="8" font-family="Share Tech Mono, monospace">EN</text>
+    </g>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- LEFT SIDE COMPONENTS                           -->
+    <!-- ══════════════════════════════════════════════ -->
+
+    <!-- DHT22 -->
+    <g id="dht22">
+      <rect x="40" y="100" width="100" height="60" rx="4" fill="#0d1f0e" stroke="#4caf50" stroke-width="1.5"/>
+      <rect x="40" y="100" width="100" height="16" rx="3" fill="#1b5e20"/>
+      <text x="90" y="112" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">DHT22</text>
+      <text x="90" y="130" text-anchor="middle" fill="#66bb6a" font-size="8" font-family="Share Tech Mono, monospace">Temp / Humidity</text>
+      <text x="90" y="148" text-anchor="middle" fill="#ffb300" font-size="8" font-family="Share Tech Mono, monospace">DATA → GPIO5</text>
+    </g>
+    <!-- Wire DHT22 to GPIO5 -->
+    <path d="M140,135 L360,135 L360,377 L492,377" fill="none" stroke="#66bb6a" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.8"/>
+
+    <!-- Soil Moisture -->
+    <g id="soil">
+      <rect x="40" y="190" width="100" height="60" rx="4" fill="#0d1f0e" stroke="#8bc34a" stroke-width="1.5"/>
+      <rect x="40" y="190" width="100" height="16" rx="3" fill="#33691e"/>
+      <text x="90" y="202" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">SOIL SENSOR</text>
+      <text x="90" y="220" text-anchor="middle" fill="#66bb6a" font-size="8" font-family="Share Tech Mono, monospace">Capacitive ADC</text>
+      <text x="90" y="238" text-anchor="middle" fill="#ffb300" font-size="8" font-family="Share Tech Mono, monospace">AOUT → GPIO1</text>
+    </g>
+    <path d="M140,220 L380,220 L380,317 L492,317" fill="none" stroke="#8bc34a" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.8"/>
+
+    <!-- LDR -->
+    <g id="ldr">
+      <rect x="40" y="280" width="100" height="60" rx="4" fill="#0d1f0e" stroke="#cddc39" stroke-width="1.5"/>
+      <rect x="40" y="280" width="100" height="16" rx="3" fill="#827717"/>
+      <text x="90" y="292" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">LDR</text>
+      <text x="90" y="310" text-anchor="middle" fill="#66bb6a" font-size="8" font-family="Share Tech Mono, monospace">Light Level</text>
+      <text x="90" y="328" text-anchor="middle" fill="#ffb300" font-size="8" font-family="Share Tech Mono, monospace">AOUT → GPIO2</text>
+    </g>
+    <path d="M140,310 L400,310 L400,337 L492,337" fill="none" stroke="#cddc39" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+
+    <!-- MQ135 -->
+    <g id="mq135">
+      <rect x="40" y="370" width="100" height="60" rx="4" fill="#0d1f0e" stroke="#ff7043" stroke-width="1.5"/>
+      <rect x="40" y="370" width="100" height="16" rx="3" fill="#bf360c"/>
+      <text x="90" y="382" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">MQ135</text>
+      <text x="90" y="400" text-anchor="middle" fill="#66bb6a" font-size="8" font-family="Share Tech Mono, monospace">Air Quality</text>
+      <text x="90" y="418" text-anchor="middle" fill="#ffb300" font-size="8" font-family="Share Tech Mono, monospace">AOUT → GPIO4</text>
+    </g>
+    <path d="M140,400 L420,400 L420,357 L492,357" fill="none" stroke="#ff7043" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.8"/>
+
+    <!-- OLED -->
+    <g id="oled">
+      <rect x="40" y="460" width="100" height="70" rx="4" fill="#0d1f0e" stroke="#42a5f5" stroke-width="1.5"/>
+      <rect x="40" y="460" width="100" height="16" rx="3" fill="#0d47a1"/>
+      <text x="90" y="472" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">OLED 128×64</text>
+      <text x="90" y="490" text-anchor="middle" fill="#66bb6a" font-size="8" font-family="Share Tech Mono, monospace">SSD1306 I2C</text>
+      <text x="90" y="506" text-anchor="middle" fill="#ffb300" font-size="8" font-family="Share Tech Mono, monospace">SDA → GPIO17</text>
+      <text x="90" y="520" text-anchor="middle" fill="#ffb300" font-size="8" font-family="Share Tech Mono, monospace">SCL → GPIO18</text>
+    </g>
+    <!-- OLED wires -->
+    <path d="M140,495 L350,495 L350,297 L808,297" fill="none" stroke="#42a5f5" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.8"/>
+    <path d="M140,510 L340,510 L340,317 L808,317" fill="none" stroke="#42a5f5" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.7"/>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- RIGHT SIDE COMPONENTS                          -->
+    <!-- ══════════════════════════════════════════════ -->
+
+    <!-- L298N + TEC -->
+    <g id="l298n">
+      <rect x="1060" y="80" width="180" height="90" rx="4" fill="#0d1f0e" stroke="#ab47bc" stroke-width="1.5"/>
+      <rect x="1060" y="80" width="180" height="16" rx="3" fill="#4a148c"/>
+      <text x="1150" y="92" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">L298N + TEC1-12706</text>
+      <text x="1150" y="110" text-anchor="middle" fill="#ce93d8" font-size="8" font-family="Share Tech Mono, monospace">ENA ← GPIO6 (PWM)</text>
+      <text x="1150" y="124" text-anchor="middle" fill="#ce93d8" font-size="8" font-family="Share Tech Mono, monospace">IN1 ← GPIO7</text>
+      <text x="1150" y="138" text-anchor="middle" fill="#ce93d8" font-size="8" font-family="Share Tech Mono, monospace">IN2 ← GPIO8</text>
+      <text x="1150" y="152" text-anchor="middle" fill="#ffb300" font-size="8" font-family="Share Tech Mono, monospace">TEC Fan ← GPIO9</text>
+    </g>
+    <!-- L298N wires from left pins -->
+    <path d="M492,397 L440,397 L440,105 L1060,105" fill="none" stroke="#ce93d8" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.8"/>
+    <path d="M492,417 L430,417 L430,118 L1060,118" fill="none" stroke="#ce93d8" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+    <path d="M492,437 L420,437 L420,132 L1060,132" fill="none" stroke="#ce93d8" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+    <path d="M492,457 L410,457 L410,147 L1060,147" fill="none" stroke="#ffb300" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+
+    <!-- Exhaust Fan -->
+    <g id="fan">
+      <rect x="1060" y="200" width="180" height="60" rx="4" fill="#0d1f0e" stroke="#26c6da" stroke-width="1.5"/>
+      <rect x="1060" y="200" width="180" height="16" rx="3" fill="#006064"/>
+      <text x="1150" y="212" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">EXHAUST FAN (PWM)</text>
+      <text x="1150" y="232" text-anchor="middle" fill="#80deea" font-size="8" font-family="Share Tech Mono, monospace">Signal ← GPIO10</text>
+      <text x="1150" y="248" text-anchor="middle" fill="#80deea" font-size="8" font-family="Share Tech Mono, monospace">12V / GND</text>
+    </g>
+    <path d="M492,477 L460,477 L460,230 L1060,230" fill="none" stroke="#26c6da" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.8"/>
+
+    <!-- 4-Relay Module -->
+    <g id="relay">
+      <rect x="1060" y="290" width="180" height="110" rx="4" fill="#0d1f0e" stroke="#ef5350" stroke-width="1.5"/>
+      <rect x="1060" y="290" width="180" height="16" rx="3" fill="#b71c1c"/>
+      <text x="1150" y="302" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">4-RELAY MODULE</text>
+      <text x="1150" y="322" text-anchor="middle" fill="#ef9a9a" font-size="8" font-family="Share Tech Mono, monospace">IN1 MIST ← GPIO11</text>
+      <text x="1150" y="338" text-anchor="middle" fill="#ef9a9a" font-size="8" font-family="Share Tech Mono, monospace">IN2 LED  ← GPIO12</text>
+      <text x="1150" y="354" text-anchor="middle" fill="#ef9a9a" font-size="8" font-family="Share Tech Mono, monospace">IN3 PUMP ← GPIO13</text>
+      <text x="1150" y="370" text-anchor="middle" fill="#ef9a9a" font-size="8" font-family="Share Tech Mono, monospace">IN4 FERT ← GPIO14</text>
+      <text x="1150" y="390" text-anchor="middle" fill="#ff8a65" font-size="8" font-family="Share Tech Mono, monospace">Active LOW — VCC=5V</text>
+    </g>
+    <!-- Relay wires -->
+    <path d="M492,497 L470,497 L470,315 L1060,315" fill="none" stroke="#ef5350" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.8"/>
+    <path d="M492,517 L480,517 L480,330 L1060,330" fill="none" stroke="#ef5350" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+    <path d="M492,537 L470,537 L470,347 L1060,347" fill="none" stroke="#ef5350" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+    <path d="M492,557 L460,557 L460,363 L1060,363" fill="none" stroke="#ef5350" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+
+    <!-- IRLZ44N MOSFET -->
+    <g id="mosfet">
+      <rect x="1060" y="430" width="180" height="60" rx="4" fill="#0d1f0e" stroke="#ffd54f" stroke-width="1.5"/>
+      <rect x="1060" y="430" width="180" height="16" rx="3" fill="#e65100"/>
+      <text x="1150" y="442" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">IRLZ44N MOSFET</text>
+      <text x="1150" y="460" text-anchor="middle" fill="#ffe082" font-size="8" font-family="Share Tech Mono, monospace">Gate ← GPIO12 (PWM)</text>
+      <text x="1150" y="476" text-anchor="middle" fill="#ffe082" font-size="8" font-family="Share Tech Mono, monospace">Controls Grow LED</text>
+    </g>
+
+    <!-- Buttons -->
+    <g id="buttons">
+      <rect x="1060" y="520" width="180" height="110" rx="4" fill="#0d1f0e" stroke="#78909c" stroke-width="1.5"/>
+      <rect x="1060" y="520" width="180" height="16" rx="3" fill="#263238"/>
+      <text x="1150" y="532" text-anchor="middle" fill="#a5d6a7" font-size="9" font-family="Share Tech Mono, monospace" font-weight="bold">4× BUTTONS</text>
+      <text x="1150" y="552" text-anchor="middle" fill="#b0bec5" font-size="8" font-family="Share Tech Mono, monospace">MODE   ← GPIO38</text>
+      <text x="1150" y="568" text-anchor="middle" fill="#b0bec5" font-size="8" font-family="Share Tech Mono, monospace">UP     ← GPIO39</text>
+      <text x="1150" y="584" text-anchor="middle" fill="#b0bec5" font-size="8" font-family="Share Tech Mono, monospace">DOWN   ← GPIO40</text>
+      <text x="1150" y="600" text-anchor="middle" fill="#b0bec5" font-size="8" font-family="Share Tech Mono, monospace">SELECT ← GPIO41</text>
+      <text x="1150" y="620" text-anchor="middle" fill="#ff8a65" font-size="8" font-family="Share Tech Mono, monospace">INPUT_PULLUP (10kΩ)</text>
+    </g>
+    <!-- Button wires from right side -->
+    <path d="M808,337 L900,337 L900,547 L1060,547" fill="none" stroke="#78909c" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.8"/>
+    <path d="M808,357 L910,357 L910,562 L1060,562" fill="none" stroke="#78909c" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+    <path d="M808,377 L920,377 L920,577 L1060,577" fill="none" stroke="#78909c" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+    <path d="M808,397 L930,397 L930,592 L1060,592" fill="none" stroke="#78909c" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+
+    <!-- Power Rails -->
+    <!-- 3.3V rail -->
+    <line x1="200" y1="30" x2="1250" y2="30" stroke="#ef5350" stroke-width="2.5" opacity="0.6"/>
+    <text x="210" y="24" fill="#ef9a9a" font-size="9" font-family="Share Tech Mono, monospace">3.3V</text>
+    <!-- GND rail -->
+    <line x1="200" y1="50" x2="1250" y2="50" stroke="#90a4ae" stroke-width="2.5" opacity="0.6"/>
+    <text x="210" y="44" fill="#b0bec5" font-size="9" font-family="Share Tech Mono, monospace">GND</text>
+    <!-- 5V rail -->
+    <line x1="200" y1="70" x2="1250" y2="70" stroke="#ffb300" stroke-width="2.5" opacity="0.6"/>
+    <text x="210" y="64" fill="#ffe082" font-size="9" font-family="Share Tech Mono, monospace">5V (Relay, Fans)</text>
+    <!-- 12V rail -->
+    <line x1="200" y1="14" x2="600" y2="14" stroke="#ff7043" stroke-width="2" opacity="0.5"/>
+    <text x="210" y="10" fill="#ff8a65" font-size="9" font-family="Share Tech Mono, monospace">12V (TEC, Fans)</text>
+
+    <!-- Legend -->
+    <g transform="translate(30, 680)">
+      <rect x="0" y="0" width="600" height="100" rx="4" fill="#0a150a" stroke="#1b5e20" stroke-width="1"/>
+      <text x="10" y="18" fill="#4caf50" font-size="10" font-family="Share Tech Mono, monospace" font-weight="bold">WIRE COLOR LEGEND</text>
+      <g font-size="9" font-family="Share Tech Mono, monospace">
+        <line x1="10" y1="32" x2="35" y2="32" stroke="#66bb6a" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="40" y="36" fill="#a5d6a7">DHT22 Signal</text>
+        <line x1="10" y1="48" x2="35" y2="48" stroke="#8bc34a" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="40" y="52" fill="#a5d6a7">Soil Moisture</text>
+        <line x1="10" y1="64" x2="35" y2="64" stroke="#cddc39" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="40" y="68" fill="#a5d6a7">LDR Light</text>
+        <line x1="10" y1="80" x2="35" y2="80" stroke="#ff7043" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="40" y="84" fill="#a5d6a7">MQ135 Air</text>
+
+        <line x1="160" y1="32" x2="185" y2="32" stroke="#42a5f5" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="190" y="36" fill="#a5d6a7">OLED I2C</text>
+        <line x1="160" y1="48" x2="185" y2="48" stroke="#ce93d8" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="190" y="52" fill="#a5d6a7">TEC / L298N</text>
+        <line x1="160" y1="64" x2="185" y2="64" stroke="#ef5350" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="190" y="68" fill="#a5d6a7">Relay Signals</text>
+        <line x1="160" y1="80" x2="185" y2="80" stroke="#78909c" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="190" y="84" fill="#a5d6a7">Buttons</text>
+
+        <line x1="310" y1="32" x2="335" y2="32" stroke="#ef5350" stroke-width="2.5"/>
+        <text x="340" y="36" fill="#ef9a9a">3.3V Power</text>
+        <line x1="310" y1="48" x2="335" y2="48" stroke="#90a4ae" stroke-width="2.5"/>
+        <text x="340" y="52" fill="#b0bec5">GND</text>
+        <line x1="310" y1="64" x2="335" y2="64" stroke="#ffb300" stroke-width="2.5"/>
+        <text x="340" y="68" fill="#ffe082">5V Rail</text>
+        <line x1="310" y1="80" x2="335" y2="80" stroke="#ff7043" stroke-width="2"/>
+        <text x="340" y="84" fill="#ff8a65">12V Rail</text>
+      </g>
+    </g>
+
+    <!-- Warning label -->
+    <g transform="translate(680, 680)">
+      <rect x="0" y="0" width="580" height="100" rx="4" fill="#1a1200" stroke="#f57f17" stroke-width="1.5"/>
+      <text x="10" y="18" fill="#ffb300" font-size="10" font-family="Share Tech Mono, monospace" font-weight="bold">⚠ ESP32-S3 WROOM-1 NOTES</text>
+      <g font-size="9" font-family="Share Tech Mono, monospace" fill="#ffe082">
+        <text x="10" y="36">▸ GPIO 26–37 : Connected to internal flash — DO NOT USE</text>
+        <text x="10" y="52">▸ GPIO 19–20 : Native USB D-/D+ — avoid for other use</text>
+        <text x="10" y="68">▸ GPIO 0,3,45,46 : Strapping pins — leave floating or pull correctly</text>
+        <text x="10" y="84">▸ ADC2 (GPIO 11–20) : Unreliable when WiFi ON — use ADC1 (GPIO 1–10)</text>
+      </g>
+    </g>
+
+    <!-- Title watermark -->
+    <text x="650" y="800" text-anchor="middle" fill="#1a2e1a" font-size="11" font-family="Share Tech Mono, monospace">SMART GREENHOUSE v3.0 — ESP32-S3 WROOM-1</text>
+
+  </svg>
+  </div>
+
+  <!-- PIN REFERENCE TABLE -->
+  <div class="pin-tables">
+
+    <div class="pin-card">
+      <h3>📡 Sensors</h3>
+      <div class="pin-row"><span class="pin-num">GPIO 1</span><span class="pin-name">Soil Moisture AOUT</span><span class="pin-type type-adc">ADC1</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 2</span><span class="pin-name">LDR (Light) AOUT</span><span class="pin-type type-adc">ADC1</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 4</span><span class="pin-name">MQ135 Air Quality</span><span class="pin-type type-adc">ADC1</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 5</span><span class="pin-name">DHT22 Data</span><span class="pin-type type-dig">DIG</span></div>
+    </div>
+
+    <div class="pin-card">
+      <h3>🌡 TEC + Fans</h3>
+      <div class="pin-row"><span class="pin-num">GPIO 6</span><span class="pin-name">L298N ENA (TEC Speed)</span><span class="pin-type type-pwm">PWM</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 7</span><span class="pin-name">L298N IN1</span><span class="pin-type type-dig">DIG</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 8</span><span class="pin-name">L298N IN2</span><span class="pin-type type-dig">DIG</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 9</span><span class="pin-name">TEC Heatsink Fan</span><span class="pin-type type-dig">DIG</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 10</span><span class="pin-name">Exhaust Fan Speed</span><span class="pin-type type-pwm">PWM</span></div>
+    </div>
+
+    <div class="pin-card">
+      <h3>💧 Relays + LED</h3>
+      <div class="pin-row"><span class="pin-num">GPIO 11</span><span class="pin-name">Mist Maker Relay</span><span class="pin-type type-dig">DIG</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 12</span><span class="pin-name">LED / MOSFET Gate</span><span class="pin-type type-pwm">PWM</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 13</span><span class="pin-name">Water Pump Relay</span><span class="pin-type type-dig">DIG</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 14</span><span class="pin-name">Fertilizer Relay</span><span class="pin-type type-dig">DIG</span></div>
+    </div>
+
+    <div class="pin-card">
+      <h3>📺 I2C — OLED</h3>
+      <div class="pin-row"><span class="pin-num">GPIO 17</span><span class="pin-name">SSD1306 SDA</span><span class="pin-type type-i2c">I2C</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 18</span><span class="pin-name">SSD1306 SCL</span><span class="pin-type type-i2c">I2C</span></div>
+      <div class="pin-row"><span class="pin-num">3.3V</span><span class="pin-name">OLED VCC</span><span class="pin-type type-dig">PWR</span></div>
+      <div class="pin-row"><span class="pin-num">GND</span><span class="pin-name">OLED GND</span><span class="pin-type type-dig">GND</span></div>
+    </div>
+
+    <div class="pin-card">
+      <h3>🔘 Buttons (INPUT_PULLUP)</h3>
+      <div class="pin-row"><span class="pin-num">GPIO 38</span><span class="pin-name">MODE Button</span><span class="pin-type type-btn">BTN</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 39</span><span class="pin-name">UP Button</span><span class="pin-type type-btn">BTN</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 40</span><span class="pin-name">DOWN Button</span><span class="pin-type type-btn">BTN</span></div>
+      <div class="pin-row"><span class="pin-num">GPIO 41</span><span class="pin-name">SELECT Button</span><span class="pin-type type-btn">BTN</span></div>
+    </div>
+
+    <div class="pin-card">
+      <h3>⚡ Power Supply</h3>
+      <div class="pin-row"><span class="pin-num">3.3V</span><span class="pin-name">DHT22, OLED, LDR</span><span class="pin-type type-dig">3V3</span></div>
+      <div class="pin-row"><span class="pin-num">5V</span><span class="pin-name">Relay VCC, Fans logic</span><span class="pin-type type-dig">5V</span></div>
+      <div class="pin-row"><span class="pin-num">12V</span><span class="pin-name">TEC, DC Fans (motor)</span><span class="pin-type type-dig">12V</span></div>
+      <div class="pin-row"><span class="pin-num">GND</span><span class="pin-name">Common ground ALL</span><span class="pin-type type-dig">GND</span></div>
+    </div>
+
+  </div>
+
+  <div class="warn-box">
+    <strong>⚠ GPIO 26–37 DO NOT USE</strong> — ESP32-S3 WROOM-1 internally connects these to SPI Flash.<br>
+    <strong>⚠ ADC2 (GPIO 11–20)</strong> — Unreliable when WiFi is ON. All sensors on ADC1 (GPIO 1–10).<br>
+    <strong>⚠ Relay Active LOW</strong> — HIGH = OFF, LOW = ON. Code uses digitalWrite(pin, HIGH) for OFF state.<br>
+    <strong>⚠ Common GND</strong> — ESP32-S3, L298N, Relay module GND ඔක්කොම connect කරන්න!
+  </div>
+
+</div>
+</body>
+</html>
